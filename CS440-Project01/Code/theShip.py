@@ -1,3 +1,4 @@
+import random
 
 BLOCKED = 0
 OPEN = 1
@@ -59,3 +60,57 @@ def find_dead_ends(grid):
                     dead_ends.append((row, col))
 
     return dead_ends
+
+#generate a D*D ship
+if D<3:
+    raise ValueError("D must larger or equal than 3")
+
+range1 = random.Random(seed)
+
+#start with a D*D grid with all blocked cells
+grid = [
+    [BLOCKED for _ in range(D)]
+    for _ in range(D)
+]
+#randomly choose a cell and open it
+start_row = range1.randrange(1, D-1)
+start_col = range1.randrange(1, D-1)
+grid[start_row][start_col] = OPEN
+
+#open a blocked cell that already has one open neighbor(ready to open)
+while True:
+    ready_to_open = find_ready_to_open(grid)
+    if not ready_to_open:
+        break
+
+    row, col = range1.choice(ready_to_open)
+    grid[row][col] == OPEN
+
+    #find the initial dead end
+    initial_dead_ends = find_dead_ends(grid)
+    initial_count = len(initial_dead_ends)
+
+    target_count = initial_count // 2
+    current_dead_ends = initial_dead_ends
+
+    #open the neighbor of the dead end randomly
+    while len(current_dead_ends) > target_count:
+        usable_dead_ends = [] #some of the dead end maynot have a blocked neighbor
+        for row, col in current_dead_ends:
+            if get_block_neighbors(grid, row, col):
+                usable_dead_ends.append(row, col)
+        if not usable_dead_ends:
+            break
+
+        row, col = range1.choice(usable_dead_ends)
+
+        blocked_neighbors = get_block_neighbors(
+            grid, row, col
+        )
+        new_row, new_col = range1.choice(blocked_neighbors)
+
+        grid[new_row][new_col] = OPEN  #open the cell
+        #recompute the dead end because the dead end has changed
+        current_dead_ends = find_dead_ends(grid)
+
+    return grid
