@@ -22,7 +22,7 @@ def getneighbors(grid, row, col):
 def count_open_neighbors(grid, row, col):
     count = 0
     for r, c in getneighbors(grid, row, col):
-        if grid[r][c] = OPEN:
+        if grid[r][c] == OPEN:
             count+=1
     return count
 
@@ -30,6 +30,32 @@ def count_open_neighbors(grid, row, col):
 def get_block_neighbors(grid, row, col):
     block_neighbors = []
     for r, c in getneighbors(grid, row, col):
-        if grid[r][c] = BLOCKED:
+        if grid[r][c] == BLOCKED:
             block_neighbors.append(r, c)
     return block_neighbors
+
+#find the blocked cells with one open neighbor
+#the target cell ready to open
+def find_ready_to_open(grid):
+    D = len(grid)
+    ready_to_open = []
+    for row in range(D):
+        for col in range(D):
+            if grid[row][col] == BLOCKED:
+                if count_open_neighbors(grid, row, col) == 1:
+                    ready_to_open.append(row, col)
+    return ready_to_open
+
+#find all open cells with only one open neighbor/three dead ends
+def find_dead_ends(grid):
+    D = len(grid)
+    dead_ends = []
+
+    for row in range(D):
+        for col in range(D):
+
+            if grid[row][col] == OPEN:
+                if count_open_neighbors(grid, row, col) == 1:
+                    dead_ends.append((row, col))
+
+    return dead_ends
