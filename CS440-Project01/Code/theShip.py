@@ -15,7 +15,7 @@ def getneighbors(grid, row, col):
     for drow, dcol in direction:
         new_row = row + drow
         new_col = col + dcol
-        if 0 <= new_row <= D and 0 <= new_col <= D:
+        if 0 <= new_row < D and 0 <= new_col < D:
             neighbors.append((new_row, new_col))
     return neighbors
 
@@ -60,6 +60,7 @@ def find_dead_ends(grid):
                     dead_ends.append((row, col))
 
     return dead_ends
+
 def generate_ship(D, seed=None):
 #generate a D*D ship
     if D<3:
@@ -86,30 +87,51 @@ def generate_ship(D, seed=None):
         row, col = range1.choice(ready_to_open)
         grid[row][col] = OPEN
 
-        #find the initial dead end
-        initial_dead_ends = find_dead_ends(grid)
-        initial_count = len(initial_dead_ends)
+    #find the initial dead end
+    initial_dead_ends = find_dead_ends(grid)
+    initial_count = len(initial_dead_ends)
 
-        target_count = initial_count // 2
-        current_dead_ends = initial_dead_ends
+    #test
+    #print("Initial dead ends:", initial_count)
 
-        #open the neighbor of the dead end randomly
-        while len(current_dead_ends) > target_count:
-            usable_dead_ends = [] #some of the dead end maynot have a blocked neighbor
-            for row, col in current_dead_ends:
-                if get_block_neighbors(grid, row, col):
-                    usable_dead_ends.append((row, col))
-            if not usable_dead_ends:
-                break
+    target_count = initial_count // 2
+    current_dead_ends = initial_dead_ends
 
-            row, col = range1.choice(usable_dead_ends)
+    #open the neighbor of the dead end randomly
+    while len(current_dead_ends) > target_count:
+        usable_dead_ends = [] #some of the dead end maynot have a blocked neighbor
+        for row, col in current_dead_ends:
+            if get_block_neighbors(grid, row, col):
+                usable_dead_ends.append((row, col))
+        if not usable_dead_ends:
+            break
 
-            blocked_neighbors = get_block_neighbors(
-                grid, row, col
-            )
-            new_row, new_col = range1.choice(blocked_neighbors)
+        row, col = range1.choice(usable_dead_ends)
 
-            grid[new_row][new_col] = OPEN  #open the cell
-            #recompute the dead end because the dead end has changed
-            current_dead_ends = find_dead_ends(grid)
+        blocked_neighbors = get_block_neighbors(
+            grid, row, col
+        )
+        new_row, new_col = range1.choice(blocked_neighbors)
+
+        grid[new_row][new_col] = OPEN  #open the cell
+        #recompute the dead end because the dead end has changed
+        current_dead_ends = find_dead_ends(grid)
+    #print("Final dead ends:", len(current_dead_ends))
     return grid
+
+
+if __name__ == "__main__":
+    D = 40
+    ship = generate_ship(D, seed=42)
+
+    print("Ship generated successfully.")
+    print("Grid size:", len(ship), "x", len(ship[0]))
+
+    open_cells = sum(
+        cell == OPEN
+        for row in ship
+        for cell in row
+    )
+
+    print("Open cells:", open_cells)
+    print("Dead ends:", len(find_dead_ends(ship)))
