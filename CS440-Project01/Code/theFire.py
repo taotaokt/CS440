@@ -49,3 +49,34 @@ def count_burning_neighbors(grid, row, col, burning_cells):
             count += 1
 
     return count
+
+def spread_fire(grid, burning_cells, q, rng):
+    if not 0 <= q <= 1:
+        raise ValueError("q value error.")
+
+    new_fires = set()
+
+    for row in range(len(grid)):
+        for col in range(len(grid)):
+
+            #only not burning cells can catch fire
+            if (
+                grid[row][col] == OPEN
+                and (row, col) not in burning_cells
+            ):
+
+                K = count_burning_neighbors(
+                    grid,
+                    row,
+                    col,
+                    burning_cells
+                )
+
+                if K > 0:
+                    probability = 1 - (1 - q) ** K
+
+                    if rng.random() < probability:
+                        new_fires.add((row, col))
+
+    #all new cells catch fire at the end of this time step
+    return burning_cells | new_fires
