@@ -15,3 +15,37 @@ def get_open_cells(grid):
 
     return open_cells
 
+#put the start fire in a random cell
+def place_fire(grid, seed = None):
+    range1 = random.Random(seed)
+
+    open_cells = get_open_cells(grid)
+
+    if not open_cells:
+        raise ValueError("No open cell is available for the fire.")
+
+    return range1.choice(open_cells)
+
+#count for the burning neighbor for the cell
+def count_burning_neighbors(grid, row, col, burning_cells):
+    D = len(grid)
+
+    directions = [
+        #up, down, left, right
+        (-1, 0), (1, 0), (0, -1), (0, 1) 
+    ]
+
+    count = 0
+
+    for drow, dcol in directions:
+        new_row = row + drow
+        new_col = col + dcol
+
+        if (
+            0 <= new_row<D
+            and 0 <= new_col<D
+            and (new_row, new_col) in burning_cells
+        ):
+            count += 1
+
+    return count
