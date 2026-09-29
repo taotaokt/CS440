@@ -17,14 +17,14 @@ def get_open_cells(grid):
 
 #put the start fire in a random cell
 def place_fire(grid, seed = None):
-    range1 = random.Random(seed)
+    rng = random.Random(seed)
 
     open_cells = get_open_cells(grid)
 
     if not open_cells:
         raise ValueError("No open cell is available for the fire.")
 
-    return range1.choice(open_cells)
+    return rng.choice(open_cells)
 
 #count for the burning neighbor for the cell
 def count_burning_neighbors(grid, row, col, burning_cells):
@@ -54,6 +54,8 @@ def spread_fire(grid, burning_cells, q, rng):
     if not 0 <= q <= 1:
         raise ValueError("q value error.")
 
+    #no rescan the fired cells
+    #store first
     new_fires = set()
 
     for row in range(len(grid)):
