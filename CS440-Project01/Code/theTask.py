@@ -33,6 +33,34 @@ def initialize_task(grid, seed=None):
     return bot_position, button_position, burning_cells
 
 
+#check whether the bot's next move is valid
+def is_valid_move(grid, current_position, next_position):
+    row, col = current_position
+    next_row, next_col = next_position
+
+    D = len(grid)
+
+    #next position must be inside the grid
+    if not (
+        0 <= next_row < D
+        and 0 <= next_col < D
+    ):
+        return False
+
+    #next position must be an open cell
+    if grid[next_row][next_col] != OPEN:
+        return False
+
+    #the bot can stay in place
+    if next_position == current_position:
+        return True
+
+    #otherwise the bot can only move one cell
+    distance = abs(next_row - row) + abs(next_col - col)
+
+    return distance == 1
+
+
 def run_task(grid, q, strategy, seed=None):
     rng = random.Random(seed)
 
