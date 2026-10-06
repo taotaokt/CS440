@@ -26,3 +26,39 @@ def get_open_neighbors(grid, position):
             neighbors.append((new_row, new_col))
 
     return neighbors
+
+#shortest path BFS
+def shortest_path(grid, start, goal, blocked_cells=None):
+
+    if blocked_cells is None:
+        blocked_cells = set()
+
+    queue = deque([start])
+    visited = {start}
+
+    parent = {}
+
+    while queue:
+        current = queue.popleft()
+
+        if current == goal:
+            path = [current]
+
+            while current != start:
+                current = parent[current]
+                path.append(current)
+
+            path.reverse()
+            return path
+
+        for neighbor in get_open_neighbors(grid, current):
+
+            if (
+                neighbor not in visited
+                and neighbor not in blocked_cells
+            ):
+                visited.add(neighbor)
+                parent[neighbor] = current
+                queue.append(neighbor)
+
+    return None
