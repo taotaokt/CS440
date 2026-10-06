@@ -104,3 +104,25 @@ class Bot1Strategy:
         return bot_position
     
     #bot 2
+    #every time step renew BFS
+    def bot2_strategy(
+    grid,
+    bot_position,
+    button_position,
+    burning_cells
+):
+
+    path = shortest_path(
+        grid,
+        bot_position,
+        button_position,
+        burning_cells
+    )
+
+    if path is None:
+        return None
+
+    if len(path) < 2:
+        return bot_position
+
+    return path[1]
