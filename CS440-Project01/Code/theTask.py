@@ -1,7 +1,6 @@
-#Bot、Button、初始 Fire 随机放在三个不同的 open cells
-#t = 0
-#随机放置 Bot / Button / Fire（三个不同 open cells）
-#每个 timestep：Bot 决定下一步 -> Bot 移动 -> 如果到达 Button → 成功，结束 -> 否则 Fire 扩散一次 -> 如果 Bot 和 Fire 在同一格 → 失败
+# At t = 0, place the bot, button, and initial fire on three distinct open cells.
+# At each time step, the bot chooses and makes a move. Reaching the button
+# succeeds immediately; otherwise, the fire spreads and may cause failure.
 
 # Bot, Button, and initial Fire are placed on three distinct open cells
 
