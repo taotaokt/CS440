@@ -5,7 +5,7 @@ from collections import deque
 OPEN = 1
 BLOCKED = 0
 
-#return all open cells in the ship.
+#return all open cells in the ship
 def get_open_cells(grid):
     return [
         (r, c)
