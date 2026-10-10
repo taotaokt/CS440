@@ -1,6 +1,4 @@
 
-import csv
-import os
 import random
 
 from Code.theStrategies import (
@@ -185,54 +183,6 @@ def compare_ships(
             })
 
     return output
-
-
-#save results to a csv
-def save_results(
-    results,
-    filename="pictures/bonus_results.csv"
-):
-
-    directory = os.path.dirname(filename)
-
-    if directory:
-        os.makedirs(directory, exist_ok=True)
-
-    with open(filename, "w", newline="") as file:
-
-        writer = csv.DictWriter(
-            file,
-            fieldnames=[
-                "ship",
-                "q",
-                "bot",
-                "success_rate"
-            ]
-        )
-
-        writer.writeheader()
-        writer.writerows(results)
-
-    print(f"\nSaved results to {filename}")
-
-
-#save the optimized ship as a csv file
-def save_ship(
-    grid,
-    filename="pictures/optimized_ship.csv"
-):
-
-    directory = os.path.dirname(filename)
-
-    if directory:
-        os.makedirs(directory, exist_ok=True)
-
-    with open(filename, "w", newline="") as file:
-
-        writer = csv.writer(file)
-        writer.writerows(grid)
-
-    print(f"Saved ship layout to {filename}")
 
 
 #count open cells in a ship
